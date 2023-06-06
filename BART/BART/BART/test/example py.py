@@ -42,7 +42,8 @@
 
 # COMMAND ----------
 
-# MAGIC %sh python setup.py build_ext --inplace
+# MAGIC %md
+# MAGIC python setup.py build_ext --inplace
 
 # COMMAND ----------
 
@@ -76,10 +77,6 @@ info
 # COMMAND ----------
 
 # MAGIC %ls /usr/include/python3.10/
-
-# COMMAND ----------
-
-# MAGIC %sh python --version
 
 # COMMAND ----------
 
