@@ -1,16 +1,15 @@
 
-CXX = g++
-CXXFLAGS = -std=gnu++11 -Wall -g -O2 -fpic -mtune=native
-##CXX = `R CMD config CXX11`
-##CXXFLAGS = `R CMD config CXX11STD` `R CMD config CXX11FLAGS` `R CMD config CXX11PICFLAGS` 
+##CXX = g++
+##CXXFLAGS = -std=gnu++11 -Wall -g -O2 -fpic -mtune=native
+CXX = `R CMD config CXX11`
+CXXFLAGS = `R CMD config CXX11STD` `R CMD config CXX11FLAGS` `R CMD config CXX11PICFLAGS` 
 
 ## Rmath library for random number generation and other needs
-##CPPFLAGS = `R CMD config CPPFLAGS` -I. -DMATHLIB_STANDALONE -DRNG_Rmath
-##LIB = `R CMD config LDFLAGS` -lRmath
-RNG_random = 'noR'
+CPPFLAGS = `R CMD config CPPFLAGS` -I. -DMATHLIB_STANDALONE -DRNG_Rmath -I/usr/share/R/include
+LIB = `R CMD config LDFLAGS` -lRmath 
 
 ## STL random class for random number generation and the Rmath functions for other needs
-CPPFLAGS = -I. -I/usr/local/include -DMATHLIB_STANDALONE -DRNG_random
+## CPPFLAGS = -I. -I/usr/local/include -DMATHLIB_STANDALONE -DRNG_random
 
 .cpp.o : Makefile common.h rn.h
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $*.o

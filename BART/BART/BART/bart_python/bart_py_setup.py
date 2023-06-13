@@ -31,4 +31,4 @@
 
 # COMMAND ----------
 
-# MAGIC %sh gcc -v -c example.c example_wrap.c -I/usr/include/python3.10
+# MAGIC %sh gcc -v -c example.c example_wrap.c -I/usr/include/python3.10 -lRmath -I /usr/share/R/include

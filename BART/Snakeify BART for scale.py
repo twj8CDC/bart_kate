@@ -33,7 +33,7 @@
 # MAGIC cd ./BART
 # MAGIC wget -O BART.pdf https://cran.r-project.org/web/packages/BART/BART.pdf
 # MAGIC wget -O BART.tar.gz https://cran.r-project.org/src/contrib/BART_2.9.4.tar.gz
-# MAGIC tar -xvf ./BART.tar.gz
+# MAGIC tar -m -xvf ./BART.tar.gz
 
 # COMMAND ----------
 
