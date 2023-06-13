@@ -5,4 +5,4 @@
 # COMMAND ----------
 
 # MAGIC %sh
-# MAGIC make wmain.out check
+# MAGIC make main.out check
