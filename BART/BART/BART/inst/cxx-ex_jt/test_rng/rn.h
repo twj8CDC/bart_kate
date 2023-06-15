@@ -29,9 +29,19 @@
 #include <vector>
 
 // Jake edit
-#define RNG_Rmath
+// #define RNG_Rmath
 
-double log_sum_exp(std::vector<double> &v);
+// Jake edit
+// Explicitly defines log_sum_exp from bartfunc.cpp (easier in this test case than pulling in the includes)
+// double log_sum_exp(std::vector<double> &v);
+double log_sum_exp(std::vector<double>& v){
+    double mx=v[0],sm=0.;
+    for(size_t i=0;i<v.size();i++) if(v[i]>mx) mx=v[i];
+    for(size_t i=0;i<v.size();i++){
+      sm += exp(v[i]-mx);
+    }
+    return mx+log(sm);
+}
 
 // pure virtual base class for random numbers
 class rn

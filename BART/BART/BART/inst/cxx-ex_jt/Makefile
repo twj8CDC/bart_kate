@@ -12,21 +12,6 @@ LIB = `R CMD config LDFLAGS` -lRmath
 ## STL random class for random number generation and the Rmath functions for other needs
 # CPPFLAGS = -I. -I/usr/local/include -DMATHLIB_STANDALONE -DRNG_random
 
-# all:
-# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c rtnorm.cpp -o rtnorm.o 
-# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c bart.cpp -o bart.o
-# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c bartfuns.cpp -o bartfuns.o
-# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c bd.cpp -o bd.o
-# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c tree.cpp -o tree.o
-# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c treefuns.cpp -o treefuns.o
-# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c pmain.cpp -o pmain.o
-# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c cpbart.cpp -o cpbart.o
-# 	swig -c++ -python -o pmain_wrap.cpp pmain.i
-# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) `python3-config --cflags` -c pmain_wrap.cpp -o pmain_wrap.o
-# 	$(CXX) -bundle `python3-config --ldflags` cpbart.o rtnorm.o bart.o bd.o tree.o treefuns.o pmain_wrap.o pmain.o -o _pmain.so
-
-
-# make at cpbart
 all:
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c rtnorm.cpp -o rtnorm.o 
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c bart.cpp -o bart.o
@@ -34,13 +19,28 @@ all:
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c bd.cpp -o bd.o
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c tree.cpp -o tree.o
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c treefuns.cpp -o treefuns.o
-#	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c pmain.cpp -o pmain.o
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c pmain.cpp -o pmain.o
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c cpbart.cpp -o cpbart.o
-#	swig -c++ -python -o pmain_wrap.cpp pmain.i
-#	$(CXX) $(CXXFLAGS) $(CPPFLAGS) `python3-config --cflags` -c pmain_wrap.cpp -o pmain_wrap.o
-	swig -c++ -python -o cpbart_wrap.cpp cpbart.i
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) `python3-config --cflags` -c cpbart_wrap.cpp -o cpbart_wrap.o
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -bundle `python3-config --ldflags` cpbart.o cpbart_wrap.o rtnorm.o bart.o bartfuns.o bd.o tree.o treefuns.o -o _cpbart.so
+	swig -c++ -python -o pmain_wrap.cpp pmain.i
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) `python3-config --cflags` -c pmain_wrap.cpp -o pmain_wrap.o
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -bundle `python3-config --ldflags` cpbart.o rtnorm.o bart.o bartfuns.o bd.o tree.o treefuns.o pmain_wrap.o pmain.o -o _pmain.so $(LIB)
+
+
+# make at cpbart
+# all:
+# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c rtnorm.cpp -o rtnorm.o 
+# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c bart.cpp -o bart.o
+# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c bartfuns.cpp -o bartfuns.o
+# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c bd.cpp -o bd.o
+# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c tree.cpp -o tree.o
+# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c treefuns.cpp -o treefuns.o
+# #	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c pmain.cpp -o pmain.o
+# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c cpbart.cpp -o cpbart.o
+# #	swig -c++ -python -o pmain_wrap.cpp pmain.i
+# #	$(CXX) $(CXXFLAGS) $(CPPFLAGS) `python3-config --cflags` -c pmain_wrap.cpp -o pmain_wrap.o
+# 	swig -c++ -python -o cpbart_wrap.cpp cpbart.i
+# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) `python3-config --cflags` -c cpbart_wrap.cpp -o cpbart_wrap.o
+# 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -bundle `python3-config --ldflags` cpbart.o cpbart_wrap.o rtnorm.o bart.o bartfuns.o bd.o tree.o treefuns.o -o _cpbart.so $(LIB)
 
 
 

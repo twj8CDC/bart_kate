@@ -108,8 +108,8 @@ class arn(rn):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc="The membership flag")
     __repr__ = _swig_repr
 
-    def __init__(self, *args):
-        _rn.arn_swiginit(self, _rn.new_arn(*args))
+    def __init__(self):
+        _rn.arn_swiginit(self, _rn.new_arn())
     __swig_destroy__ = _rn.delete_arn
 
     def normal(self):
@@ -141,12 +141,6 @@ class arn(rn):
 
     def set_wts(self, _wts):
         return _rn.arn_set_wts(self, _wts)
-
-    def set_seed(self, n1, n2):
-        return _rn.arn_set_seed(self, n1, n2)
-
-    def get_seed(self, n1, n2):
-        return _rn.arn_get_seed(self, n1, n2)
 
     def log_dirichlet(self, alpha):
         return _rn.arn_log_dirichlet(self, alpha)

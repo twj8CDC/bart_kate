@@ -7,9 +7,9 @@
 from sys import version_info as _swig_python_version_info
 # Import the low-level C/C++ module
 if __package__ or "." in __name__:
-    from . import _cpbart
+    from . import _pmain
 else:
-    import _cpbart
+    import _pmain
 
 try:
     import builtins as __builtin__
@@ -59,6 +59,6 @@ class _SwigNonDynamicMeta(type):
 
 
 
-def cpbart(n, p, np, ix, iy, ixp, m, numcut, nd, burn, mybeta, alpha, binaryOffset, tau, dart, theta, omega, grp, a, b, rho, aug, nkeeptrain, nkeeptest, nkeeptreedraws, printevery, n1, n2, _trdraw, _tedraw):
-    return _cpbart.cpbart(n, p, np, ix, iy, ixp, m, numcut, nd, burn, mybeta, alpha, binaryOffset, tau, dart, theta, omega, grp, a, b, rho, aug, nkeeptrain, nkeeptest, nkeeptreedraws, printevery, n1, n2, _trdraw, _tedraw)
+def pmain():
+    return _pmain.pmain()
 

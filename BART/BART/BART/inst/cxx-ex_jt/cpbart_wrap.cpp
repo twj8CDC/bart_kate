@@ -2979,8 +2979,10 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 /* -------- TYPES TABLE (BEGIN) -------- */
 
 #define SWIGTYPE_p_char swig_types[0]
-static swig_type_info *swig_types[2];
-static swig_module_info swig_module = {swig_types, 1, 0, 0, 0, 0};
+#define SWIGTYPE_p_double swig_types[1]
+#define SWIGTYPE_p_int swig_types[2]
+static swig_type_info *swig_types[4];
+static swig_module_info swig_module = {swig_types, 3, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -3129,13 +3131,545 @@ namespace swig {
 
 
 	#include "cpbart.h"
-	#include "rn.h"
-	#include "common.h"
+
+
+SWIGINTERN int
+SWIG_AsVal_double (PyObject *obj, double *val)
+{
+  int res = SWIG_TypeError;
+  if (PyFloat_Check(obj)) {
+    if (val) *val = PyFloat_AsDouble(obj);
+    return SWIG_OK;
+#if PY_VERSION_HEX < 0x03000000
+  } else if (PyInt_Check(obj)) {
+    if (val) *val = (double) PyInt_AsLong(obj);
+    return SWIG_OK;
+#endif
+  } else if (PyLong_Check(obj)) {
+    double v = PyLong_AsDouble(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_OK;
+    } else {
+      PyErr_Clear();
+    }
+  }
+#ifdef SWIG_PYTHON_CAST_MODE
+  {
+    int dispatch = 0;
+    double d = PyFloat_AsDouble(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = d;
+      return SWIG_AddCast(SWIG_OK);
+    } else {
+      PyErr_Clear();
+    }
+    if (!dispatch) {
+      long v = PyLong_AsLong(obj);
+      if (!PyErr_Occurred()) {
+	if (val) *val = v;
+	return SWIG_AddCast(SWIG_AddCast(SWIG_OK));
+      } else {
+	PyErr_Clear();
+      }
+    }
+  }
+#endif
+  return res;
+}
+
+
+#include <float.h>
+
+
+#include <math.h>
+
+
+SWIGINTERNINLINE int
+SWIG_CanCastAsInteger(double *d, double min, double max) {
+  double x = *d;
+  if ((min <= x && x <= max)) {
+   double fx = floor(x);
+   double cx = ceil(x);
+   double rd =  ((x - fx) < 0.5) ? fx : cx; /* simple rint */
+   if ((errno == EDOM) || (errno == ERANGE)) {
+     errno = 0;
+   } else {
+     double summ, reps, diff;
+     if (rd < x) {
+       diff = x - rd;
+     } else if (rd > x) {
+       diff = rd - x;
+     } else {
+       return 1;
+     }
+     summ = rd + x;
+     reps = diff/summ;
+     if (reps < 8*DBL_EPSILON) {
+       *d = rd;
+       return 1;
+     }
+   }
+  }
+  return 0;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_unsigned_SS_long (PyObject *obj, unsigned long *val) 
+{
+#if PY_VERSION_HEX < 0x03000000
+  if (PyInt_Check(obj)) {
+    long v = PyInt_AsLong(obj);
+    if (v >= 0) {
+      if (val) *val = v;
+      return SWIG_OK;
+    } else {
+      return SWIG_OverflowError;
+    }
+  } else
+#endif
+  if (PyLong_Check(obj)) {
+    unsigned long v = PyLong_AsUnsignedLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_OK;
+    } else {
+      PyErr_Clear();
+      return SWIG_OverflowError;
+    }
+  }
+#ifdef SWIG_PYTHON_CAST_MODE
+  {
+    int dispatch = 0;
+    unsigned long v = PyLong_AsUnsignedLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_AddCast(SWIG_OK);
+    } else {
+      PyErr_Clear();
+    }
+    if (!dispatch) {
+      double d;
+      int res = SWIG_AddCast(SWIG_AsVal_double (obj,&d));
+      if (SWIG_IsOK(res) && SWIG_CanCastAsInteger(&d, 0, ULONG_MAX)) {
+	if (val) *val = (unsigned long)(d);
+	return res;
+      }
+    }
+  }
+#endif
+  return SWIG_TypeError;
+}
+
+
+#include <limits.h>
+#if !defined(SWIG_NO_LLONG_MAX)
+# if !defined(LLONG_MAX) && defined(__GNUC__) && defined (__LONG_LONG_MAX__)
+#   define LLONG_MAX __LONG_LONG_MAX__
+#   define LLONG_MIN (-LLONG_MAX - 1LL)
+#   define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
+# endif
+#endif
+
+
+#if defined(LLONG_MAX) && !defined(SWIG_LONG_LONG_AVAILABLE)
+#  define SWIG_LONG_LONG_AVAILABLE
+#endif
+
+
+#ifdef SWIG_LONG_LONG_AVAILABLE
+SWIGINTERN int
+SWIG_AsVal_unsigned_SS_long_SS_long (PyObject *obj, unsigned long long *val)
+{
+  int res = SWIG_TypeError;
+  if (PyLong_Check(obj)) {
+    unsigned long long v = PyLong_AsUnsignedLongLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_OK;
+    } else {
+      PyErr_Clear();
+      res = SWIG_OverflowError;
+    }
+  } else {
+    unsigned long v;
+    res = SWIG_AsVal_unsigned_SS_long (obj,&v);
+    if (SWIG_IsOK(res)) {
+      if (val) *val = v;
+      return res;
+    }
+  }
+#ifdef SWIG_PYTHON_CAST_MODE
+  {
+    const double mant_max = 1LL << DBL_MANT_DIG;
+    double d;
+    res = SWIG_AsVal_double (obj,&d);
+    if (SWIG_IsOK(res) && !SWIG_CanCastAsInteger(&d, 0, mant_max))
+      return SWIG_OverflowError;
+    if (SWIG_IsOK(res) && SWIG_CanCastAsInteger(&d, 0, mant_max)) {
+      if (val) *val = (unsigned long long)(d);
+      return SWIG_AddCast(res);
+    }
+    res = SWIG_TypeError;
+  }
+#endif
+  return res;
+}
+#endif
+
+
+SWIGINTERNINLINE int
+SWIG_AsVal_size_t (PyObject * obj, size_t *val)
+{
+  int res = SWIG_TypeError;
+#ifdef SWIG_LONG_LONG_AVAILABLE
+  if (sizeof(size_t) <= sizeof(unsigned long)) {
+#endif
+    unsigned long v;
+    res = SWIG_AsVal_unsigned_SS_long (obj, val ? &v : 0);
+    if (SWIG_IsOK(res) && val) *val = static_cast< size_t >(v);
+#ifdef SWIG_LONG_LONG_AVAILABLE
+  } else if (sizeof(size_t) <= sizeof(unsigned long long)) {
+    unsigned long long v;
+    res = SWIG_AsVal_unsigned_SS_long_SS_long (obj, val ? &v : 0);
+    if (SWIG_IsOK(res) && val) *val = static_cast< size_t >(v);
+  }
+#endif
+  return res;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_long (PyObject *obj, long* val)
+{
+#if PY_VERSION_HEX < 0x03000000
+  if (PyInt_Check(obj)) {
+    if (val) *val = PyInt_AsLong(obj);
+    return SWIG_OK;
+  } else
+#endif
+  if (PyLong_Check(obj)) {
+    long v = PyLong_AsLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_OK;
+    } else {
+      PyErr_Clear();
+      return SWIG_OverflowError;
+    }
+  }
+#ifdef SWIG_PYTHON_CAST_MODE
+  {
+    int dispatch = 0;
+    long v = PyInt_AsLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_AddCast(SWIG_OK);
+    } else {
+      PyErr_Clear();
+    }
+    if (!dispatch) {
+      double d;
+      int res = SWIG_AddCast(SWIG_AsVal_double (obj,&d));
+      if (SWIG_IsOK(res) && SWIG_CanCastAsInteger(&d, LONG_MIN, LONG_MAX)) {
+	if (val) *val = (long)(d);
+	return res;
+      }
+    }
+  }
+#endif
+  return SWIG_TypeError;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_bool (PyObject *obj, bool *val)
+{
+  int r;
+  if (!PyBool_Check(obj))
+    return SWIG_ERROR;
+  r = PyObject_IsTrue(obj);
+  if (r == -1)
+    return SWIG_ERROR;
+  if (val) *val = r ? true : false;
+  return SWIG_OK;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_unsigned_SS_int (PyObject * obj, unsigned int *val)
+{
+  unsigned long v;
+  int res = SWIG_AsVal_unsigned_SS_long (obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v > UINT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< unsigned int >(v);
+    }
+  }  
+  return res;
+}
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+SWIGINTERN PyObject *_wrap_cpbart(PyObject *self, PyObject *args) {
+  PyObject *resultobj = 0;
+  size_t arg1 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  double *arg4 = (double *) 0 ;
+  int *arg5 = (int *) 0 ;
+  double *arg6 = (double *) 0 ;
+  size_t arg7 ;
+  int *arg8 = (int *) 0 ;
+  size_t arg9 ;
+  size_t arg10 ;
+  double arg11 ;
+  double arg12 ;
+  double arg13 ;
+  double arg14 ;
+  bool arg15 ;
+  double arg16 ;
+  double arg17 ;
+  int *arg18 = (int *) 0 ;
+  double arg19 ;
+  double arg20 ;
+  double arg21 ;
+  bool arg22 ;
+  size_t arg23 ;
+  size_t arg24 ;
+  size_t arg25 ;
+  size_t arg26 ;
+  unsigned int arg27 ;
+  unsigned int arg28 ;
+  double *arg29 = (double *) 0 ;
+  double *arg30 = (double *) 0 ;
+  size_t val1 ;
+  int ecode1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  void *argp5 = 0 ;
+  int res5 = 0 ;
+  void *argp6 = 0 ;
+  int res6 = 0 ;
+  size_t val7 ;
+  int ecode7 = 0 ;
+  void *argp8 = 0 ;
+  int res8 = 0 ;
+  size_t val9 ;
+  int ecode9 = 0 ;
+  size_t val10 ;
+  int ecode10 = 0 ;
+  double val11 ;
+  int ecode11 = 0 ;
+  double val12 ;
+  int ecode12 = 0 ;
+  double val13 ;
+  int ecode13 = 0 ;
+  double val14 ;
+  int ecode14 = 0 ;
+  bool val15 ;
+  int ecode15 = 0 ;
+  double val16 ;
+  int ecode16 = 0 ;
+  double val17 ;
+  int ecode17 = 0 ;
+  void *argp18 = 0 ;
+  int res18 = 0 ;
+  double val19 ;
+  int ecode19 = 0 ;
+  double val20 ;
+  int ecode20 = 0 ;
+  double val21 ;
+  int ecode21 = 0 ;
+  bool val22 ;
+  int ecode22 = 0 ;
+  size_t val23 ;
+  int ecode23 = 0 ;
+  size_t val24 ;
+  int ecode24 = 0 ;
+  size_t val25 ;
+  int ecode25 = 0 ;
+  size_t val26 ;
+  int ecode26 = 0 ;
+  unsigned int val27 ;
+  int ecode27 = 0 ;
+  unsigned int val28 ;
+  int ecode28 = 0 ;
+  void *argp29 = 0 ;
+  int res29 = 0 ;
+  void *argp30 = 0 ;
+  int res30 = 0 ;
+  PyObject *swig_obj[30] ;
+  
+  if (!SWIG_Python_UnpackTuple(args, "cpbart", 30, 30, swig_obj)) SWIG_fail;
+  ecode1 = SWIG_AsVal_size_t(swig_obj[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "cpbart" "', argument " "1"" of type '" "size_t""'");
+  } 
+  arg1 = static_cast< size_t >(val1);
+  ecode2 = SWIG_AsVal_size_t(swig_obj[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "cpbart" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(swig_obj[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "cpbart" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  res4 = SWIG_ConvertPtr(swig_obj[3], &argp4,SWIGTYPE_p_double, 0 |  0 );
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "cpbart" "', argument " "4"" of type '" "double *""'"); 
+  }
+  arg4 = reinterpret_cast< double * >(argp4);
+  res5 = SWIG_ConvertPtr(swig_obj[4], &argp5,SWIGTYPE_p_int, 0 |  0 );
+  if (!SWIG_IsOK(res5)) {
+    SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "cpbart" "', argument " "5"" of type '" "int *""'"); 
+  }
+  arg5 = reinterpret_cast< int * >(argp5);
+  res6 = SWIG_ConvertPtr(swig_obj[5], &argp6,SWIGTYPE_p_double, 0 |  0 );
+  if (!SWIG_IsOK(res6)) {
+    SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "cpbart" "', argument " "6"" of type '" "double *""'"); 
+  }
+  arg6 = reinterpret_cast< double * >(argp6);
+  ecode7 = SWIG_AsVal_size_t(swig_obj[6], &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "cpbart" "', argument " "7"" of type '" "size_t""'");
+  } 
+  arg7 = static_cast< size_t >(val7);
+  res8 = SWIG_ConvertPtr(swig_obj[7], &argp8,SWIGTYPE_p_int, 0 |  0 );
+  if (!SWIG_IsOK(res8)) {
+    SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "cpbart" "', argument " "8"" of type '" "int *""'"); 
+  }
+  arg8 = reinterpret_cast< int * >(argp8);
+  ecode9 = SWIG_AsVal_size_t(swig_obj[8], &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "cpbart" "', argument " "9"" of type '" "size_t""'");
+  } 
+  arg9 = static_cast< size_t >(val9);
+  ecode10 = SWIG_AsVal_size_t(swig_obj[9], &val10);
+  if (!SWIG_IsOK(ecode10)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "cpbart" "', argument " "10"" of type '" "size_t""'");
+  } 
+  arg10 = static_cast< size_t >(val10);
+  ecode11 = SWIG_AsVal_double(swig_obj[10], &val11);
+  if (!SWIG_IsOK(ecode11)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode11), "in method '" "cpbart" "', argument " "11"" of type '" "double""'");
+  } 
+  arg11 = static_cast< double >(val11);
+  ecode12 = SWIG_AsVal_double(swig_obj[11], &val12);
+  if (!SWIG_IsOK(ecode12)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode12), "in method '" "cpbart" "', argument " "12"" of type '" "double""'");
+  } 
+  arg12 = static_cast< double >(val12);
+  ecode13 = SWIG_AsVal_double(swig_obj[12], &val13);
+  if (!SWIG_IsOK(ecode13)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode13), "in method '" "cpbart" "', argument " "13"" of type '" "double""'");
+  } 
+  arg13 = static_cast< double >(val13);
+  ecode14 = SWIG_AsVal_double(swig_obj[13], &val14);
+  if (!SWIG_IsOK(ecode14)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode14), "in method '" "cpbart" "', argument " "14"" of type '" "double""'");
+  } 
+  arg14 = static_cast< double >(val14);
+  ecode15 = SWIG_AsVal_bool(swig_obj[14], &val15);
+  if (!SWIG_IsOK(ecode15)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode15), "in method '" "cpbart" "', argument " "15"" of type '" "bool""'");
+  } 
+  arg15 = static_cast< bool >(val15);
+  ecode16 = SWIG_AsVal_double(swig_obj[15], &val16);
+  if (!SWIG_IsOK(ecode16)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode16), "in method '" "cpbart" "', argument " "16"" of type '" "double""'");
+  } 
+  arg16 = static_cast< double >(val16);
+  ecode17 = SWIG_AsVal_double(swig_obj[16], &val17);
+  if (!SWIG_IsOK(ecode17)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode17), "in method '" "cpbart" "', argument " "17"" of type '" "double""'");
+  } 
+  arg17 = static_cast< double >(val17);
+  res18 = SWIG_ConvertPtr(swig_obj[17], &argp18,SWIGTYPE_p_int, 0 |  0 );
+  if (!SWIG_IsOK(res18)) {
+    SWIG_exception_fail(SWIG_ArgError(res18), "in method '" "cpbart" "', argument " "18"" of type '" "int *""'"); 
+  }
+  arg18 = reinterpret_cast< int * >(argp18);
+  ecode19 = SWIG_AsVal_double(swig_obj[18], &val19);
+  if (!SWIG_IsOK(ecode19)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode19), "in method '" "cpbart" "', argument " "19"" of type '" "double""'");
+  } 
+  arg19 = static_cast< double >(val19);
+  ecode20 = SWIG_AsVal_double(swig_obj[19], &val20);
+  if (!SWIG_IsOK(ecode20)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode20), "in method '" "cpbart" "', argument " "20"" of type '" "double""'");
+  } 
+  arg20 = static_cast< double >(val20);
+  ecode21 = SWIG_AsVal_double(swig_obj[20], &val21);
+  if (!SWIG_IsOK(ecode21)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode21), "in method '" "cpbart" "', argument " "21"" of type '" "double""'");
+  } 
+  arg21 = static_cast< double >(val21);
+  ecode22 = SWIG_AsVal_bool(swig_obj[21], &val22);
+  if (!SWIG_IsOK(ecode22)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode22), "in method '" "cpbart" "', argument " "22"" of type '" "bool""'");
+  } 
+  arg22 = static_cast< bool >(val22);
+  ecode23 = SWIG_AsVal_size_t(swig_obj[22], &val23);
+  if (!SWIG_IsOK(ecode23)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode23), "in method '" "cpbart" "', argument " "23"" of type '" "size_t""'");
+  } 
+  arg23 = static_cast< size_t >(val23);
+  ecode24 = SWIG_AsVal_size_t(swig_obj[23], &val24);
+  if (!SWIG_IsOK(ecode24)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode24), "in method '" "cpbart" "', argument " "24"" of type '" "size_t""'");
+  } 
+  arg24 = static_cast< size_t >(val24);
+  ecode25 = SWIG_AsVal_size_t(swig_obj[24], &val25);
+  if (!SWIG_IsOK(ecode25)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode25), "in method '" "cpbart" "', argument " "25"" of type '" "size_t""'");
+  } 
+  arg25 = static_cast< size_t >(val25);
+  ecode26 = SWIG_AsVal_size_t(swig_obj[25], &val26);
+  if (!SWIG_IsOK(ecode26)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode26), "in method '" "cpbart" "', argument " "26"" of type '" "size_t""'");
+  } 
+  arg26 = static_cast< size_t >(val26);
+  ecode27 = SWIG_AsVal_unsigned_SS_int(swig_obj[26], &val27);
+  if (!SWIG_IsOK(ecode27)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode27), "in method '" "cpbart" "', argument " "27"" of type '" "unsigned int""'");
+  } 
+  arg27 = static_cast< unsigned int >(val27);
+  ecode28 = SWIG_AsVal_unsigned_SS_int(swig_obj[27], &val28);
+  if (!SWIG_IsOK(ecode28)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode28), "in method '" "cpbart" "', argument " "28"" of type '" "unsigned int""'");
+  } 
+  arg28 = static_cast< unsigned int >(val28);
+  res29 = SWIG_ConvertPtr(swig_obj[28], &argp29,SWIGTYPE_p_double, 0 |  0 );
+  if (!SWIG_IsOK(res29)) {
+    SWIG_exception_fail(SWIG_ArgError(res29), "in method '" "cpbart" "', argument " "29"" of type '" "double *""'"); 
+  }
+  arg29 = reinterpret_cast< double * >(argp29);
+  res30 = SWIG_ConvertPtr(swig_obj[29], &argp30,SWIGTYPE_p_double, 0 |  0 );
+  if (!SWIG_IsOK(res30)) {
+    SWIG_exception_fail(SWIG_ArgError(res30), "in method '" "cpbart" "', argument " "30"" of type '" "double *""'"); 
+  }
+  arg30 = reinterpret_cast< double * >(argp30);
+  cpbart(SWIG_STD_MOVE(arg1),SWIG_STD_MOVE(arg2),SWIG_STD_MOVE(arg3),arg4,arg5,arg6,SWIG_STD_MOVE(arg7),arg8,SWIG_STD_MOVE(arg9),SWIG_STD_MOVE(arg10),arg11,arg12,arg13,arg14,arg15,arg16,arg17,arg18,arg19,arg20,arg21,arg22,SWIG_STD_MOVE(arg23),SWIG_STD_MOVE(arg24),SWIG_STD_MOVE(arg25),SWIG_STD_MOVE(arg26),arg27,arg28,arg29,arg30);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 static PyMethodDef SwigMethods[] = {
+	 { "cpbart", _wrap_cpbart, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
@@ -3143,15 +3677,23 @@ static PyMethodDef SwigMethods[] = {
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char,
+  &_swigt__p_double,
+  &_swigt__p_int,
 };
 
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char,
+  _swigc__p_double,
+  _swigc__p_int,
 };
 
 
