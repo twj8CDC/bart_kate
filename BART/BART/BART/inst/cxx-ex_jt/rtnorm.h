@@ -1,6 +1,7 @@
 /*
  *  BART: Bayesian Additive Regression Trees
- *  Copyright (C) 2017 Robert McCulloch and Rodney Sparapani
+ *  Copyright (C) 2017-2018 Robert McCulloch, Rodney Sparapani
+ *                          and Robert Gramacy
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,50 +18,17 @@
  *  https://www.R-project.org/Licenses/GPL-2
  */
 
-#ifndef GUARD_common_h
-#define GUARD_common_h
+#ifndef GUARD_rtnorm
+#define GUARD_rtnorm
 
-#define MATHLIB_STANDALONE
-#ifdef MATHLIB_STANDALONE
-#define NoRcpp
-#else
-#define RNG_Rcpp
-#endif
+#include "common.h"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
+double rtnorm(double mean, double tau, double sd, rn& gen);
 
-using std::endl;
+#ifndef NoRcpp
 
-#ifdef _OPENMP
-#include <omp.h>
-#endif
-
-#ifdef NoRcpp
-
-#include <stdio.h> // for printf
-
-using std::cout;
-
-#define PI 3.141592653589793238462643383280
-
-#else // YesRcpp
-
-#include <Rcpp.h>
-
-#define printf Rprintf
-#define cout Rcpp::Rcout
+RcppExport SEXP crtnorm(SEXP, SEXP, SEXP, SEXP);
 
 #endif
-
-// log(2*pi)
-#define LTPI 1.837877066409345483560659472811
-// sqrt(2*pi)
-#define RTPI 2.506628274631000502415765284811
-
-#include "rn.h"
 
 #endif

@@ -21,7 +21,7 @@
 #ifndef GUARD_rn_h
 #define GUARD_rn_h
 // Jake edit
-#define RNG_Rmath
+// #define RNG_Rmath
 
 double log_sum_exp(std::vector<double>& v);
 

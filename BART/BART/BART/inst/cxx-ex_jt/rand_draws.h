@@ -1,6 +1,6 @@
 /*
  *  BART: Bayesian Additive Regression Trees
- *  Copyright (C) 2017 Robert McCulloch and Rodney Sparapani
+ *  Copyright (C) 2017 Robert Gramacy
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,50 +17,29 @@
  *  https://www.R-project.org/Licenses/GPL-2
  */
 
-#ifndef GUARD_common_h
-#define GUARD_common_h
+#ifndef __RAND_DRAWS_H__
+#define __RAND_DRAWS_H__
 
-#define MATHLIB_STANDALONE
-#ifdef MATHLIB_STANDALONE
-#define NoRcpp
-#else
-#define RNG_Rcpp
-#endif
+#include "common.h"
+#include "randomkit.h"
+#include <stdlib.h>
+#include <assert.h>
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
+void newRNGstates(void);
+void deleteRNGstates(void);
+double runi(rk_state *state);
+void rnor(double *x, rk_state *state);
+double rexpo(double lambda, rk_state *state);
+double sq(double x);
+double rinvgauss(const double mu, const double lambda);
+double rtnorm_reject(double mean, double tau, double sd, rk_state* state);
+double rexpo(double scale, rk_state* state);
+double expo_rand(rk_state *state);
 
-using std::endl;
+#ifndef NoRcpp
 
-#ifdef _OPENMP
-#include <omp.h>
-#endif
-
-#ifdef NoRcpp
-
-#include <stdio.h> // for printf
-
-using std::cout;
-
-#define PI 3.141592653589793238462643383280
-
-#else // YesRcpp
-
-#include <Rcpp.h>
-
-#define printf Rprintf
-#define cout Rcpp::Rcout
+RcppExport SEXP crtnorm_reject(SEXP, SEXP, SEXP);
 
 #endif
-
-// log(2*pi)
-#define LTPI 1.837877066409345483560659472811
-// sqrt(2*pi)
-#define RTPI 2.506628274631000502415765284811
-
-#include "rn.h"
 
 #endif

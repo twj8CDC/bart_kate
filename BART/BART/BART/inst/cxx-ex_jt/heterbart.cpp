@@ -17,50 +17,31 @@
  *  https://www.R-project.org/Licenses/GPL-2
  */
 
-#ifndef GUARD_common_h
-#define GUARD_common_h
+#include "heterbart.h"
 
-#define MATHLIB_STANDALONE
-#ifdef MATHLIB_STANDALONE
-#define NoRcpp
-#else
-#define RNG_Rcpp
-#endif
-
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
-
-using std::endl;
-
-#ifdef _OPENMP
-#include <omp.h>
-#endif
-
-#ifdef NoRcpp
-
-#include <stdio.h> // for printf
-
-using std::cout;
-
-#define PI 3.141592653589793238462643383280
-
-#else // YesRcpp
-
-#include <Rcpp.h>
-
-#define printf Rprintf
-#define cout Rcpp::Rcout
-
-#endif
-
-// log(2*pi)
-#define LTPI 1.837877066409345483560659472811
-// sqrt(2*pi)
-#define RTPI 2.506628274631000502415765284811
-
-#include "rn.h"
-
-#endif
+//--------------------------------------------------
+void heterbart::pr()
+{
+   cout << "+++++heterbart object:\n";
+   bart::pr();
+}
+//--------------------------------------------------
+void heterbart::draw(double *sigma, rn& gen)
+{
+   for(size_t j=0;j<m;j++) {
+      fit(t[j],xi,p,n,x,ftemp);
+      for(size_t k=0;k<n;k++) {
+         allfit[k] = allfit[k]-ftemp[k];
+         r[k] = y[k]-allfit[k];
+      }
+      heterbd(t[j],xi,di,pi,sigma,nv,pv,aug,gen);
+      heterdrmu(t[j],xi,di,pi,sigma,gen);
+      fit(t[j],xi,p,n,x,ftemp);
+      for(size_t k=0;k<n;k++) allfit[k] += ftemp[k];
+   }
+   if(dartOn) {
+     draw_s(nv,lpv,theta,gen);
+     draw_theta0(const_theta,theta,lpv,a,b,rho,gen);
+     for(size_t j=0;j<p;j++) pv[j]=::exp(lpv[j]);
+   }
+}

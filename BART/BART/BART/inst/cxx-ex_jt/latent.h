@@ -17,50 +17,35 @@
  *  https://www.R-project.org/Licenses/GPL-2
  */
 
-#ifndef GUARD_common_h
-#define GUARD_common_h
+#ifndef GUARD_latent
+#define GUARD_latent
 
-#define MATHLIB_STANDALONE
-#ifdef MATHLIB_STANDALONE
-#define NoRcpp
-#else
-#define RNG_Rcpp
-#endif
-
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
-
-using std::endl;
-
-#ifdef _OPENMP
-#include <omp.h>
-#endif
+#include "common.h"
+#include "randomkit.h"
+#include <stdlib.h>
+#include <assert.h>
+#include "rand_draws.h"
 
 #ifdef NoRcpp
+using ::pnorm;
+#else
+using R::pnorm;
+#endif
 
-#include <stdio.h> // for printf
+extern int NS;
+extern rk_state** states;
 
-using std::cout;
+#ifndef NoRcpp
 
-#define PI 3.141592653589793238462643383280
+RcppExport SEXP cdraw_lambda(SEXP lambda, SEXP mean, SEXP kmax, SEXP thin);
 
-#else // YesRcpp
-
-#include <Rcpp.h>
-
-#define printf Rprintf
-#define cout Rcpp::Rcout
+RcppExport SEXP cdraw_z(SEXP mean, SEXP tau, SEXP lambda);
 
 #endif
 
-// log(2*pi)
-#define LTPI 1.837877066409345483560659472811
-// sqrt(2*pi)
-#define RTPI 2.506628274631000502415765284811
-
-#include "rn.h"
+void draw_z(int n, double *xbeta, double *lambda, double *z_out);
+void draw_lambda(int n, double *xbeta_in, int kmax, int thin, double *lambda_inout);
+double draw_lambda_i(double lambda_old, double xbeta, int kmax, int thin, rk_state *state);
+double draw_lambda_prior(double *psii, int kmax, rk_state *state);
 
 #endif
