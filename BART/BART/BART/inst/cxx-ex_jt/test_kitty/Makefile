@@ -2,22 +2,24 @@
 FLAGS = -fPIC
 LIBFLAGS = -L /usr/local/lib/
 # the python interface through swig
-PYTHONI = -I/Users/jacobtiegs/opt/anaconda3/include/python3.8
-PYTHONL = -Xlinker -export-dynamic
+
+
 
 # default super-target
-all: 
+kitty_py: 
 	g++ -fPIC -c kitty.cpp -o kitty.o
-	# g++ -fPIC -c main.cpp -o main.o
-	swig -c++ -python -o kitty_wrap.cxx kitty.i 
-	g++ $(FLAGS) `python3-config --cflags` -c kitty_wrap.cxx -o kitty_wrap.o
-	g++ -bundle `python3-config --ldflags` kitty.o kitty_wrap.o -o _kitty.so
+	swig -c++ -python -o kitty_wrap.cpp kitty.i
+	g++ -fPIC `python3-config --cflags` -c kitty_wrap.cpp -o kitty_wrap.o
+	g++ -shared `python3-config --ldflags` kitty.o kitty_wrap.o -o _kitty.so
 
 kitty:	
 	g++ -fPIC -c kitty.cpp -o kitty.o
 	g++ -fPIC -c main.cpp -o main.o
-	g++ -shared kitty.o main.o -o main.so
+	g++ -Wall -o main.out kitty.o main.o 
 
+hello:
+	g++ -Wall -o hello.out hello.cpp
+	./hello.out
 
 clean:
-	rm -f *.o kitty.py *.so kitty_wrap.cxx
+	rm -f *.o kitty.py *.so kitty_wrap.cpp *.out
