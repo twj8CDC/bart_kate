@@ -8,7 +8,7 @@ CXXFLAGS = -std=gnu++11 -Wall -g -O2 -fpic -mtune=native
 # CPPFLAGS = `R CMD config CPPFLAGS` -I. -DMATHLIB_STANDALONE -DRNG_Rmath #updated because CPPFLAGS has no content
 CPPFLAGS = -I/usr/include/ -I. -DRNG_Rmath -DMATHLIB_STANDALONE
 # LIB = `R CMD config LDFLAGS` -lRmath # not working
-LIB = -L/usr/lib -lRmath 
+LIB = -L/usr/lib/-lRmath 
 
 
 ## STL random class for random number generation and the Rmath functions for other needs

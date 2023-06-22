@@ -5,7 +5,8 @@ CXXFLAGS = -std=gnu++11 -Wall -g -O2 -fpic -mtune=native
 ##CXXFLAGS = `R CMD config CXX11STD` `R CMD config CXX11FLAGS` `R CMD config CXX11PICFLAGS` 
 
 ## Rmath library for random number generation and other needs
-CPPFLAGS = `R CMD config CPPFLAGS` -I. -DMATHLIB_STANDALONE -DRNG_Rmath
+# CPPFLAGS = `R CMD config CPPFLAGS` -I. -DMATHLIB_STANDALONE -DRNG_Rmath
+CPPFLAGS = -I/usr/share/R/include -I. -DMATHLIB_STANDALONE -DRNG_Rmath
 LIB = `R CMD config LDFLAGS` -lRmath
 # RNG_random = 'noR'
 
