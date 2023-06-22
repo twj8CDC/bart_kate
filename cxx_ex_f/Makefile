@@ -7,7 +7,8 @@ CXXFLAGS = -std=gnu++11 -Wall -g -O2 -fpic -mtune=native
 ## Rmath library for random number generation and other needs
 # CPPFLAGS = `R CMD config CPPFLAGS` -I. -DMATHLIB_STANDALONE -DRNG_Rmath #updated because CPPFLAGS has no content
 # CPPFLAGS = -I/usr/include/ -I. -DRNG_Rmath -DMATHLIB_STANDALONE
-CPPFLAGS = -I./incl -I. -DRNG_Rmath -DMATHLIB_STANDALONE
+# CPPFLAGS = -I. -I./include -DRNG_Rmath -DMATHLIB_STANDALONE
+CPPFLAGS = -I./include -DRNG_Rmath -DMATHLIB_STANDALONE
 # LIB = `R CMD config LDFLAGS` -lRmath # not working
 # LIB = -L/usr/lib/ -lRmath 
 LIB = -L./slib -lRmath 
@@ -19,14 +20,14 @@ LIB = -L./slib -lRmath
 all:
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c rtnorm.cpp -o rtnorm.o 
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c bart.cpp -o bart.o 
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c bartfuns.cpp -o bartfuns.o $(LIB)
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c bd.cpp -o bd.o $(LIB) 
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c tree.cpp -o tree.o $(LIB)
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c treefuns.cpp -o treefuns.o $(LIB)
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c pmain.cpp -o pmain.o $(LIB)
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c cpbart.cpp -o cpbart.o $(LIB)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c bartfuns.cpp -o bartfuns.o 
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c bd.cpp -o bd.o 
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c tree.cpp -o tree.o 
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c treefuns.cpp -o treefuns.o 
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c pmain.cpp -o pmain.o 
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c cpbart.cpp -o cpbart.o 
 	swig -c++ -python -o pmain_wrap.cpp pmain.i 
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) `python3-config --cflags` -c pmain_wrap.cpp -o pmain_wrap.o $(LIB)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) `python3-config --cflags` -c pmain_wrap.cpp -o pmain_wrap.o 
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -shared `python3-config --ldflags` cpbart.o rtnorm.o bart.o bartfuns.o bd.o tree.o treefuns.o pmain_wrap.o pmain.o -o _pmain.so $(LIB)
 
 
