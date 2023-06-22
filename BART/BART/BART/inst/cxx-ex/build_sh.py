@@ -5,4 +5,6 @@
 # COMMAND ----------
 
 # MAGIC %sh
-# MAGIC LD_DEBUG=all make main.out check
+# MAGIC make clean
+# MAGIC make check
+# MAGIC
