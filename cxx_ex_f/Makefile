@@ -18,6 +18,7 @@ CPPFLAGS = -I./include -DRNG_Rmath -DMATHLIB_STANDALONE
 LIB = `R CMD config LDFLAGS` -L./slib -lRmath
 
 
+
 ## STL random class for random number generation and the Rmath functions for other needs
 # CPPFLAGS = -I. -I/usr/local/include -DMATHLIB_STANDALONE -DRNG_random
 
