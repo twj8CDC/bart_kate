@@ -5,6 +5,14 @@ CXX = `R CMD config CXX11`
 CXXFLAGS = `R CMD config CXX11STD` `R CMD config CXX11FLAGS` `R CMD config CXX11PICFLAGS` 
 
 ## Rmath library for random number generation and other needs
+
+# CPPFLAGS = `R CMD config CPPFLAGS` -I. -DMATHLIB_STANDALONE -DRNG_Rmath
+CPPFLAGS = -I/usr/share/R/include -I. -DMATHLIB_STANDALONE -DRNG_Rmath
+LIB = `R CMD config LDFLAGS` -lRmath
+# RNG_random = 'noR'
+
+## STL random class for random number generation and the Rmath functions for other needs
+# CPPFLAGS = -I. -I/usr/local/include -DMATHLIB_STANDALONE -DRNG_random
 CPPFLAGS = `R CMD config CPPFLAGS` -I. -DMATHLIB_STANDALONE -DRNG_Rmath -I /usr/share/R/include
 LIB = `R CMD config LDFLAGS` -lRmath 
 

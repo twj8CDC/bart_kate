@@ -36,21 +36,7 @@
 
 # COMMAND ----------
 
-# MAGIC %md
-# MAGIC There are two ways to compile the package.
-# MAGIC First with the python setup.py and the other directly with the C++ compiler
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC python setup.py build_ext --inplace
-
-# COMMAND ----------
-
-# MAGIC %sh swig -python example.i
-
-# COMMAND ----------
-
+# get python includes location
 from sysconfig import get_paths
 from pprint import pprint
 
@@ -65,23 +51,8 @@ pprint(info)
 
 # COMMAND ----------
 
-from sysconfig import get_paths
-from pprint import pprint
-
-info = get_paths()  # a dictionary of key-paths
-
-# pretty print it for now
-# pprint(info)
-info
-
-# COMMAND ----------
-
-# MAGIC %ls /usr/include/python3.10/
-
-# COMMAND ----------
-
 import example
 
 # COMMAND ----------
 
-example.fact(4)
+example.fact(6)

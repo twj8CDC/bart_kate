@@ -20,6 +20,7 @@
 #ifndef GUARD_common_h
 #define GUARD_common_h
 
+// #define MATHLIB_STANDALONE
 #ifdef MATHLIB_STANDALONE
 #define NoRcpp
 #else
