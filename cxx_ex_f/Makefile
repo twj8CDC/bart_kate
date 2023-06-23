@@ -27,8 +27,8 @@ all:
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c pmain.cpp -o pmain.o 
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c cpbart.cpp -o cpbart.o 
 	swig -c++ -python -o pmain_wrap.cpp pmain.i 
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) `python3-config --cflags` -c pmain_wrap.cpp -o pmain_wrap.o 
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -shared `python3-config --ldflags` cpbart.o rtnorm.o bart.o bartfuns.o bd.o tree.o treefuns.o pmain_wrap.o pmain.o -o _pmain.so $(LIB)
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) `python3.10-config --cflags` -c pmain_wrap.cpp -o pmain_wrap.o 
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -shared `python3.10-config --ldflags` cpbart.o rtnorm.o bart.o bartfuns.o bd.o tree.o treefuns.o pmain_wrap.o pmain.o -o _pmain.so $(LIB)
 
 
 # make at cpbartpPpPp
