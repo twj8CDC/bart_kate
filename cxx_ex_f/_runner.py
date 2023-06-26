@@ -7,36 +7,17 @@
 
 # COMMAND ----------
 
-import pmain
+# MAGIC %sh ./_runscript.sh
 
 # COMMAND ----------
 
-# MAGIC %sh python3.10 _runscript.py
+# MAGIC %sh find /usr/ -name "*Rmath*"
 
 # COMMAND ----------
 
-# MAGIC %sh echo $LD_LIBRARY_PATH
+# MAGIC %sh find /usr/ -name "*libR*so*"
 
 # COMMAND ----------
 
-# MAGIC %sh LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/Workspace/Repos/twj8@cdc.gov/bart_kate/cxx_ex_f/slib
-
-# COMMAND ----------
-
-import sys
-
-# COMMAND ----------
-
-sys.path.append("/Workspace/Repos/twj8@cdc.gov/bart_kate/cxx_ex_f/slib")
-
-# COMMAND ----------
-
-sys.path
-
-# COMMAND ----------
-
-import pmain
-
-# COMMAND ----------
-
-# MAGIC %sh export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/Workspace/Repos/twj8@cdc.gov/bart_kate/cxx_ex_f/slib
+# MAGIC %md
+# MAGIC we only have the libR.so and no libRmath.so (which is the Rmath standalone). I belive that the Rmath components are in the "libR.so" and can be accessed with "R.h", however there is some issues with the way the code is written that the "Rmath.h" has different names with the library is standalone. The c++ src code for pmain expects Rmath standalone and those "Rmath.h" names. When I try excluding the `-DRMATH_STANDALONE` flag it results in errors in the pmain src code due to the expectation of the standalone library.
